@@ -29,6 +29,7 @@ This directory contains a very basic starting point for challenge 1. The instruc
 ##Starting Symfony server
 ```
 cd /path/to/boilerplate
+composer install
 symfony server:start
 ```
 
