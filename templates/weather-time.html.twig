@@ -1,0 +1,74 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Weather Time{% endblock %}
+
+{% block stylesheets %}{% endblock %}
+
+{% block javascripts %}{% endblock %}
+
+{% block body %}
+    <h1>Weather</h1>
+    <div>
+        {{ form(form) }}
+    </div>
+    {% if not zip is empty %}
+        <h2>
+            Results for
+            {{ zip }}
+        </h2>
+    {% endif %}
+    {% if not errors is empty %}
+        <div>
+            Error{{ errors|length > 1 ? 's' : '' }}
+            retrieving results:
+            <ul>
+                {% for error in errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% else %}
+        {% if not locationData is empty %}
+            <div>
+                <h3>Location Data:</h3>
+                <ul>
+                    {% for field, value in locationData %}
+                        <li>
+                            <strong>{{ field }}:</strong>
+                            {{ value|raw }}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+        {% if not generalWeatherData is empty %}
+            <div>
+                <h3>General Weather Data:</h3>
+                <ul>
+                    {% for field, value in generalWeatherData %}
+                        <li>
+                            <strong>{{ field }}:</strong>
+                            {{ value|raw }}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+        {% if not weatherReports is empty %}
+            <div>
+                <h3>
+                    Weather Report{{ weatherReports|length > 1 ? 's' : '' }}:
+                </h3>
+                <ul>
+                    {% for weatherReport in weatherReports %}
+                        <li>
+                            <strong>{{ weatherReport.main }}:</strong>
+                            {{ weatherReport.description }}
+                            <img src="//openweathermap.org/img/w/{{ weatherReport.icon }}.png"/>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+    {% endif %}
+{% endblock %}
