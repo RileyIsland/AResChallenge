@@ -29,16 +29,7 @@ This directory contains a very basic starting point for challenge 1. The instruc
 ##Starting PHP server
 ```
 cd /path/to/boilerplate
-./run.sh
+symfony server:start
 ```
 
-When the server starts you should see:
-```
-$ ./run.sh 
-PHP 7.2.9 Development Server started at Tue Apr 30 09:59:29 2019
-Listening on http://localhost:9009
-Document root is /path/to/boilerplate/web
-Press Ctrl-C to quit.
-```
-
-Visit [http://localhost:9009](http://localhost:9009) to interact with code.
+Visit [http://localhost:8000](http://localhost:8000) to interact with code.
