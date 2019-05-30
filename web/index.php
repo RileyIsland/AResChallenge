@@ -1,5 +1,9 @@
 <?php
 
+// TODO: implement using Symfony and move code to proper places
+// TODO: add CSS styles
+// TODO: implement front-end framework to take advantage of AJAX/SPA
+
 require_once('WeatherForZip.php');
 
 session_start();

@@ -1,5 +1,7 @@
 <?php
 
+// TODO: separate code into Model/Repository/Transformers/Utils as needed
+
 /**
  * @class WeatherForZip
  *
@@ -7,6 +9,7 @@
  */
 class WeatherForZip
 {
+    // TODO: use environment variables to hide api key
     const API_URL = 'http://api.openweathermap.org/data/2.5/weather';
     const API_KEY = 'a0b48e1390d21ffe9bd578d7428b9f00';
 
