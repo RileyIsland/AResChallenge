@@ -26,7 +26,7 @@ You can use the following API for weather information.  Feel free to use a diffe
 
 This directory contains a very basic starting point for challenge 1. The instructions below should work for Linux/MacOS.
 
-##Starting PHP server
+##Starting Symfony server
 ```
 cd /path/to/boilerplate
 symfony server:start
