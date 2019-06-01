@@ -3,12 +3,13 @@
 namespace App\Controller;
 
 use App\APIClient\WeatherForZip;
-use App\Form\WeatherTimeForm;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpClient\HttpClient;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Config\Definition\Exception\Exception;
 
 /**
  * WeatherTimeController
@@ -16,55 +17,59 @@ use Symfony\Component\Routing\Annotation\Route;
 class WeatherTimeController extends AbstractController
 {
     /**
-     * @Route("", name="weather-time")
+     * @Route("weather-time", methods="GET", name="weather-time.index")
      */
-    public function __invoke(Request $request, ParameterBagInterface $params)
+    public function index(Request $request)
     {
-        $weatherTimeForm = new WeatherTimeForm();
-        $weatherTimeForm->setZip(
-            $request->request->get('form')['zip']
-                ?? $request->getSession()->get('zip')
+        return $this->render(
+            'weather-time.html.twig',
+            [
+                'zip' => $request->getSession()->get('zip')
+            ]
         );
-        $form = $this->createForm(WeatherTimeForm::class, $weatherTimeForm);
-        $form->handleRequest($request);
+    }
 
-        $viewParams = [
-            'errors' => null,
-            'form' => $form->createView(),
-            'generalWeatherData' => null,
-            'locationData' => null,
-            'weatherReports' => null,
-            'zip' => null
-        ];
+    /**
+     * @Route("weather-time", methods="POST", name="weather-time.show")
+     */
+    public function show(Request $request, ParameterBagInterface $params)
+    {
+        $zip = json_decode($request->getContent())->zip ?? null;
 
-        if (!$form->isSubmitted() || $form->isValid()) {
-            $viewParams['zip'] = $weatherTimeForm->getZip();
-            $openWeatherMap = new WeatherForZip(
-                $weatherTimeForm->getZip(),
-                $params
-            );
+        $responseData = [
+             'errors' => null,
+             'general_weather' => null,
+             'location_data' => null,
+             'weather_reports' => null,
+             'zip' => $zip
+         ];
+
+        if (preg_match('/^[0-9]{5}(-[0-9]{4})?$/', $zip)) {
+            $openWeatherMap = new WeatherForZip($zip, $params);
             if (!$openWeatherMap->hasErrors()) {
-                $request->getSession()->set('zip', $form->getData()->getZip());
-                $viewParams = array_merge(
-                    $viewParams,
-                    [
-                        'generalWeatherData' =>
-                            $openWeatherMap->hasGeneralWeatherData()
-                                ? $openWeatherMap->getGeneralWeatherData()
-                                : null,
-                        'locationData' => $openWeatherMap->hasLocationData()
-                            ? $openWeatherMap->getLocationData()
-                            : null,
-                        'weatherReports' => $openWeatherMap->hasWeatherReports()
-                            ? $openWeatherMap->getWeatherReports()
-                            : null,
-                    ]
-                );
+                $request->getSession()->set('zip', $zip);
+                $responseData = array_merge(
+                     $responseData,
+                     [
+                         'general_weather' =>
+                             $openWeatherMap->hasGeneralWeather()
+                                 ? $openWeatherMap->getGeneralWeather()
+                                 : null,
+                         'location_data' => $openWeatherMap->hasLocationData()
+                             ? $openWeatherMap->getLocationData()
+                             : null,
+                         'weather_reports' => $openWeatherMap->hasWeatherReports()
+                             ? $openWeatherMap->getWeatherReports()
+                             : null,
+                     ]
+                 );
             } else {
-                $viewParams['errors'] = $openWeatherMap->getErrors();
+                $responseData['errors'] = $openWeatherMap->getErrors();
             }
+        } else {
+            $responseData['errors'][] = 'Invalid Zip';
         }
 
-        return $this->render('weather-time.html.twig', $viewParams);
+        return new JsonResponse($responseData);
     }
 }

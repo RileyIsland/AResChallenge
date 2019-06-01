@@ -16,7 +16,7 @@ class WeatherForZip
     /** @var Array */
     private $errors;
     /** @var Array */
-    private $generalWeatherData;
+    private $generalWeather;
     /** @var Array */
     private $locationData;
     /** @var Array */
@@ -99,11 +99,11 @@ class WeatherForZip
         $this->setLocationData(
             array_filter(
                 [
-                    'city' => $result->name,
-                    'country' => $result->sys->country ?? null,
-                    'latitude' => $result->coord->lat ?? null,
-                    'longitude' => $result->coord->lon ?? null,
-                    'report time' => $this->formatDateTime($result->dt),
+                    'City' => $result->name,
+                    'Country' => $result->sys->country ?? null,
+                    'Latitude' => $result->coord->lat ?? null,
+                    'Longitude' => $result->coord->lon ?? null,
+                    'Report Time' => $this->formatDateTime($result->dt),
                 ],
                 function ($fieldValue) {
                     return !is_null($fieldValue);
@@ -112,32 +112,32 @@ class WeatherForZip
         );
 
         // set general weather data
-        $this->setGeneralWeatherData(
+        $this->setGeneralWeather(
             array_filter(
                 [
-                    'sunrise' => $this->formatDateTime($result->sys->sunrise ?? null),
-                    'sunset' => $this->formatDateTime($result->sys->sunset ?? null),
-                    'temperature' => !is_null($result->main->temp)
+                    'Sunrise' => $this->formatDateTime($result->sys->sunrise ?? null),
+                    'Sunset' => $this->formatDateTime($result->sys->sunset ?? null),
+                    'Temperature' => !is_null($result->main->temp)
                         ? "{$result->main->temp} &#8457;"
                         : null,
-                    'minimum temperature' => !is_null($result->main->temp_min)
+                    'Minimum Temperature' => !is_null($result->main->temp_min)
                         ? "{$result->main->temp_min} &#8457;"
                         : null,
-                    'maximum temperature' => !is_null($result->main->temp_max)
+                    'Maximum Temperature' => !is_null($result->main->temp_max)
                         ? "{$result->main->temp_max} &#8457;"
                         : null,
-                    'pressure' => $result->main->pressure ?? null,
-                    'humidity' => $result->main->humidity ?? null,
-                    'visibility' => $result->visibility,
-                    'wind speed' => $result->wind->speed ?? null,
-                    'wind degrees' => $result->wind->deg ?? null,
-                    'rain for last hour' => $result->rain->{'1h'} ?? null,
-                    'rain for last 3 hours' => $result->rain->{'3h'} ?? null,
-                    'cloud cover' => !is_null($result->clouds->all)
+                    'Pressure' => $result->main->pressure ?? null,
+                    'Humidity' => $result->main->humidity ?? null,
+                    'Visibility' => $result->visibility,
+                    'Wind Speed' => $result->wind->speed ?? null,
+                    'Wind Degrees' => $result->wind->deg ?? null,
+                    'Rain for Last Hour' => $result->rain->{'1h'} ?? null,
+                    'Rain for Last 3 Hours' => $result->rain->{'3h'} ?? null,
+                    'Cloud Cover' => !is_null($result->clouds->all)
                         ? $result->clouds->all . '%'
                         : null,
-                    'snow for last hour' => $result->snow->{'1h'} ?? null,
-                    'snow for last 3 hours' => $result->snow->{'3h'} ?? null,
+                    'Snow for Last Hour' => $result->snow->{'1h'} ?? null,
+                    'Snow for Last 3 Hours' => $result->snow->{'3h'} ?? null,
                 ],
                 function ($fieldValue) {
                     return !is_null($fieldValue);
@@ -153,8 +153,10 @@ class WeatherForZip
      * @param int|null $datetime
      * @param String format
      */
-    private function formatDateTime(int $datetime = null, String $format = 'n/j/Y H:i:s T')
-    {
+    private function formatDateTime(
+        int $datetime = null,
+        String $format = 'n/j/Y H:i:s T'
+    ) {
         return !is_null($datetime) ? date($format, $datetime) : null;
     }
 
@@ -170,11 +172,11 @@ class WeatherForZip
     }
 
     /**
-     * accessor method for $generalWeatherData
+     * accessor method for $generalWeather
      */
-    public function getGeneralWeatherData()
+    public function getGeneralWeather()
     {
-        return $this->generalWeatherData;
+        return $this->generalWeather;
     }
 
     /**
@@ -212,12 +214,12 @@ class WeatherForZip
     }
 
     /**
-     * accessor method to identify if class field $generalWeatherData is filled
+     * accessor method to identify if class field $generalWeather is filled
      * @return boolean true if general weather data esists, false otherwise
      */
-    public function hasGeneralWeatherData()
+    public function hasGeneralWeather()
     {
-        return !empty($this->generalWeatherData);
+        return !empty($this->generalWeather);
     }
 
     /**
@@ -252,12 +254,12 @@ class WeatherForZip
     }
 
     /**
-     * mutator method to set $generalWeatherData class field
-     * @var Array $generalWeatherData
+     * mutator method to set $generalWeather class field
+     * @var Array $generalWeather
      */
-    private function setGeneralWeatherData(array $generalWeatherData)
+    private function setGeneralWeather(array $generalWeather)
     {
-        $this->generalWeatherData = $generalWeatherData;
+        $this->generalWeather = $generalWeather;
     }
 
     /**
