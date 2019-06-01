@@ -9,7 +9,6 @@ use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Config\Definition\Exception\Exception;
 
 /**
  * WeatherTimeController
@@ -45,26 +44,26 @@ class WeatherTimeController extends AbstractController
          ];
 
         if (preg_match('/^[0-9]{5}(-[0-9]{4})?$/', $zip)) {
-            $openWeatherMap = new WeatherForZip($zip, $params);
-            if (!$openWeatherMap->hasErrors()) {
+            $weatherForZip = new WeatherForZip($zip, $params);
+            if (!$weatherForZip->hasErrors()) {
                 $request->getSession()->set('zip', $zip);
                 $responseData = array_merge(
                      $responseData,
                      [
                          'general_weather' =>
-                             $openWeatherMap->hasGeneralWeather()
-                                 ? $openWeatherMap->getGeneralWeather()
+                             $weatherForZip->hasGeneralWeather()
+                                 ? $weatherForZip->getGeneralWeather()
                                  : null,
-                         'location_data' => $openWeatherMap->hasLocationData()
-                             ? $openWeatherMap->getLocationData()
+                         'location_data' => $weatherForZip->hasLocationData()
+                             ? $weatherForZip->getLocationData()
                              : null,
-                         'weather_reports' => $openWeatherMap->hasWeatherReports()
-                             ? $openWeatherMap->getWeatherReports()
+                         'weather_reports' => $weatherForZip->hasWeatherReports()
+                             ? $weatherForZip->getWeatherReports()
                              : null,
                      ]
                  );
             } else {
-                $responseData['errors'] = $openWeatherMap->getErrors();
+                $responseData['errors'] = $weatherForZip->getErrors();
             }
         } else {
             $responseData['errors'][] = 'Invalid Zip';

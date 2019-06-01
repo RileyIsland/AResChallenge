@@ -77,19 +77,6 @@ class WeatherForZip
     }
 
     /**
-     * validate class is ready to make API call
-     */
-    private function validate()
-    {
-        $isValid = true;
-        if (!preg_match('/^[0-9]{5}(-[0-9]{4})?$/', $this->getZip())) {
-            $this->addError('Invalid Zip Code');
-            $isValid = false;
-        }
-        return $isValid;
-    }
-
-    /**
      * parse API call result into usable class fields
      * @var \stdClass $result
      */
