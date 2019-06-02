@@ -30,7 +30,11 @@ This directory contains a very basic starting point for challenge 1. The instruc
 ```
 cd /path/to/boilerplate
 composer install
+yarn install
+yarn encore dev
 symfony server:start
 ```
 
 Visit [http://localhost:8000](http://localhost:8000) to interact with code.
+
+If the Symfony CLI tool is not available, visit https://symfony.com/download to install it.
