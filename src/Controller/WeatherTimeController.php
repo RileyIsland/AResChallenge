@@ -16,7 +16,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class WeatherTimeController extends AbstractController
 {
     /**
-     * @Route("weather-time", methods="GET", name="weather-time.index")
+     * @Route("", methods="GET", name="weather-time.index")
      */
     public function index(Request $request)
     {
@@ -29,7 +29,7 @@ class WeatherTimeController extends AbstractController
     }
 
     /**
-     * @Route("weather-time", methods="POST", name="weather-time.show")
+     * @Route("", methods="POST", name="weather-time.show")
      */
     public function show(Request $request, ParameterBagInterface $params)
     {
