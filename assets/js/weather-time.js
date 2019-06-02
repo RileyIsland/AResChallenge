@@ -70,14 +70,16 @@ class WeatherTime extends React.Component {
                 }
             })
             .catch((error) => {
-                console.error('Error:', error);
-                this.setState({
-                    fetching: false,
-                    results: {
-                        errors: ['fetch error (see console for details)'],
-                        zip: zip
-                    }
-                });
+                if (requestCounter === this.state.requestCounter) {
+                    console.error('Error:', error);
+                    this.setState({
+                        fetching: false,
+                        results: {
+                            errors: ['fetch error (see console for details)'],
+                            zip: zip
+                        }
+                    });
+                }
             });
     }
 
