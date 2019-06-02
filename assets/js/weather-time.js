@@ -107,7 +107,7 @@ class WeatherTime extends React.Component {
                                 </Col>
                             </Form.Group>
                             <Form.Group as={Row}>
-                                <Col xs={{offset: 1}}>
+                                <Col xs={{span: 11, offset: 1}}>
                                     <Button type="submit">Go</Button>
                                 </Col>
                             </Form.Group>
