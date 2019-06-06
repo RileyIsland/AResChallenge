@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\APIClient\OpenWeatherMap;
 use App\Transformer\WeatherTime;
 use Exception;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -33,7 +32,7 @@ class WeatherTimeController extends AbstractController
     /**
      * @Route("", methods="POST", name="weather-time.show")
      */
-    public function show(Request $request, ParameterBagInterface $params)
+    public function show(OpenWeatherMap $apiClient, Request $request)
     {
         $zip = json_decode($request->getContent())->zip ?? null;
 
@@ -50,13 +49,13 @@ class WeatherTimeController extends AbstractController
         }
 
         try {
-            $apiClient = new OpenWeatherMap($params);
             $weatherForZip = $apiClient->getWeatherForZip($zip);
         } catch (Exception $e) {
             return new JsonResponse(
                 [
                     'errors' => [
-                        'Error retrieving results from API: ' . $e->getMessage(),
+                        'Error retrieving results from API: ' .
+                        $e->getMessage(),
                     ],
                     'zip' => $zip,
                 ],
