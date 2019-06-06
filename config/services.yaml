@@ -6,7 +6,6 @@
 parameters:
     locale: 'en'
     open_weather_map:
-        api_url: 'http://api.openweathermap.org/data/2.5/weather'
         api_key: '%env(OPEN_WEATHER_MAP_API_KEY)%'
 
 services:

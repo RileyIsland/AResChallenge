@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
-use App\APIClient\WeatherForZip;
+use App\APIClient\OpenWeatherMap;
+use App\Transformer\WeatherTime;
+use Exception;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpClient\HttpClient;
@@ -35,40 +37,33 @@ class WeatherTimeController extends AbstractController
     {
         $zip = json_decode($request->getContent())->zip ?? null;
 
-        $responseData = [
-             'errors' => null,
-             'general_weather' => null,
-             'location_data' => null,
-             'weather_reports' => null,
-             'zip' => $zip
-         ];
-
-        if (preg_match('/^[0-9]{5}(-[0-9]{4})?$/', $zip)) {
-            $weatherForZip = new WeatherForZip($zip, $params);
-            if (!$weatherForZip->hasErrors()) {
-                $request->getSession()->set('zip', $zip);
-                $responseData = array_merge(
-                     $responseData,
-                     [
-                         'general_weather' =>
-                             $weatherForZip->hasGeneralWeather()
-                                 ? $weatherForZip->getGeneralWeather()
-                                 : null,
-                         'location_data' => $weatherForZip->hasLocationData()
-                             ? $weatherForZip->getLocationData()
-                             : null,
-                         'weather_reports' => $weatherForZip->hasWeatherReports()
-                             ? $weatherForZip->getWeatherReports()
-                             : null,
-                     ]
-                 );
-            } else {
-                $responseData['errors'] = $weatherForZip->getErrors();
-            }
-        } else {
-            $responseData['errors'][] = 'Invalid Zip';
+        if (!preg_match('/^[0-9]{5}$/', $zip)) {
+            return new JsonResponse(
+                [
+                    'errors' => [
+                        'Validation Error: Invalid Zip',
+                    ],
+                    'zip' => $zip,
+                ],
+                400
+            );
         }
 
-        return new JsonResponse($responseData);
+        try {
+            $apiClient = new OpenWeatherMap($params);
+            $weatherForZip = $apiClient->getWeatherForZip($zip);
+        } catch (Exception $e) {
+            return new JsonResponse(
+                [
+                    'errors' => [
+                        'Error retrieving results from API: ' . $e->getMessage(),
+                    ],
+                    'zip' => $zip,
+                ],
+                400
+            );
+        }
+
+        return new JsonResponse(WeatherTime::transform($zip, $weatherForZip));
     }
 }
