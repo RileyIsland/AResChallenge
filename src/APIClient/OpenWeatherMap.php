@@ -4,6 +4,7 @@ namespace App\APIClient;
 
 use Exception;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 /**
  * OpenWeatherMap API client
@@ -16,15 +17,15 @@ class OpenWeatherMap extends AbstractAPIClient
     /** @var string */
     private $apiUrl = 'http://api.openweathermap.org/data/2.5/';
 
-    public function __construct($apiKey)
+    public function __construct(HttpClientInterface $httpClient, $apiKey)
     {
         $this->apiKey = $apiKey;
-        parent::__construct();
+        $this->httpClient = $httpClient;
     }
 
     public function getWeatherForZip(string $zip = null)
     {
-        $apiResponse = parent::request(
+        $apiResponse = $this->request(
             'GET',
             $this->apiUrl . 'weather',
             [
