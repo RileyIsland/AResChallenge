@@ -1,5 +1,8 @@
 <?php
 
+// TODO: figure out proper way to do these tests and remove this class,
+// TODO: because test should not call an external API
+
 namespace App\Tests\Controller\API;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -9,28 +12,6 @@ class WeatherTimeControllerTest extends WebTestCase
     public function testShow()
     {
         $client = static::createClient();
-
-        // test valid zip
-        $validZip = '92106';
-        $client->xmlHttpRequest(
-            'POST',
-            '',
-            [],
-            [],
-            [
-                'CONTENT_TYPE' => 'application/json',
-            ],
-            json_encode([
-                'zip' => $validZip
-            ])
-        );
-        $response = $client->getResponse();
-        $this->assertEquals(200, $response->getStatusCode());
-        $responseContent = json_decode($response->getContent());
-        $this->assertObjectHasAttribute('location_data', $responseContent);
-        $this->assertObjectHasAttribute('general_weather', $responseContent);
-        $this->assertObjectHasAttribute('weather_reports', $responseContent);
-        $this->assertEquals($validZip, $responseContent->zip);
 
         // test missing zip
         $client->xmlHttpRequest(

@@ -2,8 +2,8 @@
 
 namespace App\Controller\API;
 
-use App\APIClient\OpenWeatherMap;
-use App\Transformer\WeatherTime;
+use App\APIClient\OpenWeatherMapAPIClient;
+use App\Transformer\WeatherTimeTransformer;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpClient\HttpClient;
@@ -19,7 +19,7 @@ class WeatherTimeController extends AbstractController
     /**
      * @Route("", methods="POST", name="weather-time.show")
      */
-    public function show(OpenWeatherMap $apiClient, Request $request)
+    public function show(OpenWeatherMapAPIClient $apiClient, Request $request)
     {
         $zip = json_decode($request->getContent())->zip ?? null;
 
@@ -50,6 +50,8 @@ class WeatherTimeController extends AbstractController
             );
         }
 
-        return new JsonResponse(WeatherTime::transform($zip, $weatherForZip));
+        return new JsonResponse(
+            WeatherTimeTransformer::transform($zip, $weatherForZip)
+        );
     }
 }

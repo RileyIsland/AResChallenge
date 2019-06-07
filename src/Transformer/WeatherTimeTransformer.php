@@ -4,10 +4,12 @@ namespace App\Transformer;
 
 use stdClass;
 
-class WeatherTime
+class WeatherTimeTransformer
 {
     /**
-     * transform OpenWeatherMap weather-for-zip response for WeatherTime page
+     * transform
+     *      - from OpenWeatherMapAPIClient weather-for-zip response
+     *      - to Weather Time response
      * @param string $zip
      * @param stdClass $weatherForZip
      */

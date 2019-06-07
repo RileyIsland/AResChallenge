@@ -8,7 +8,7 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 /**
  * OpenWeatherMap API client
  */
-class OpenWeatherMap extends AbstractAPIClient
+class OpenWeatherMapAPIClient extends AbstractAPIClient
 {
     /** @var string */
     private $apiKey;
