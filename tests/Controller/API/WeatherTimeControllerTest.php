@@ -11,6 +11,7 @@ class WeatherTimeControllerTest extends WebTestCase
         $client = static::createClient();
 
         // test valid zip
+        $validZip = '92106';
         $client->xmlHttpRequest(
             'POST',
             '',
@@ -20,7 +21,7 @@ class WeatherTimeControllerTest extends WebTestCase
                 'CONTENT_TYPE' => 'application/json',
             ],
             json_encode([
-                'zip' => '92109'
+                'zip' => $validZip
             ])
         );
         $response = $client->getResponse();
@@ -29,7 +30,7 @@ class WeatherTimeControllerTest extends WebTestCase
         $this->assertObjectHasAttribute('location_data', $responseContent);
         $this->assertObjectHasAttribute('general_weather', $responseContent);
         $this->assertObjectHasAttribute('weather_reports', $responseContent);
-        $this->assertEquals('92109', $responseContent->zip);
+        $this->assertEquals($validZip, $responseContent->zip);
 
         // test missing zip
         $client->xmlHttpRequest(
@@ -51,6 +52,7 @@ class WeatherTimeControllerTest extends WebTestCase
         $this->assertNull($responseContent->zip);
 
         // test invalid zip
+        $invalidZip = 'abcde';
         $client->xmlHttpRequest(
             'POST',
             '/',
@@ -60,7 +62,7 @@ class WeatherTimeControllerTest extends WebTestCase
                 'CONTENT_TYPE' => 'application/json',
             ],
             json_encode([
-                'zip' => 'abcde'
+                'zip' => $invalidZip
             ])
         );
         $response = $client->getResponse();
@@ -70,9 +72,10 @@ class WeatherTimeControllerTest extends WebTestCase
             'Validation Error: Invalid Zip',
             $responseContent->errors[0]
         );
-        $this->assertEquals('abcde', $responseContent->zip);
+        $this->assertEquals($invalidZip, $responseContent->zip);
 
         // test city not found
+        $nonExistentZip = '00000';
         $client->xmlHttpRequest(
             'POST',
             '/',
@@ -82,7 +85,7 @@ class WeatherTimeControllerTest extends WebTestCase
                 'CONTENT_TYPE' => 'application/json',
             ],
             json_encode([
-                'zip' => '00000'
+                'zip' => $nonExistentZip
             ])
         );
         $response = $client->getResponse();
@@ -92,6 +95,6 @@ class WeatherTimeControllerTest extends WebTestCase
             'Error retrieving results from API: city not found',
             $responseContent->errors[0]
         );
-        $this->assertEquals('00000', $responseContent->zip);
+        $this->assertEquals($nonExistentZip, $responseContent->zip);
     }
 }

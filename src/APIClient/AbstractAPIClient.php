@@ -3,9 +3,11 @@
 namespace App\APIClient;
 
 use Symfony\Component\HttpClient\HttpClient;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
+use Symfony\Contracts\HttpClient\ResponseStreamInterface;
 
-abstract class AbstractAPIClient implements APIClientInterface
+abstract class AbstractAPIClient implements HttpClientInterface
 {
     protected $httpClient;
 
@@ -37,5 +39,15 @@ abstract class AbstractAPIClient implements APIClientInterface
         array $options = []
     ): ResponseInterface {
         return $this->httpClient->request($method, $url, $options);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function stream(
+        $responses,
+        float $timeout = null
+    ): ResponseStreamInterface {
+        return $this->httpClient->stream($responses, $timeout);
     }
 }
