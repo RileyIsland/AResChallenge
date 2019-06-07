@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\API;
 
 use App\APIClient\OpenWeatherMap;
 use App\Transformer\WeatherTime;
@@ -16,19 +16,6 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class WeatherTimeController extends AbstractController
 {
-    /**
-     * @Route("", methods="GET", name="weather-time.index")
-     */
-    public function index(Request $request)
-    {
-        return $this->render(
-            'weather-time.html.twig',
-            [
-                'zip' => $request->getSession()->get('zip')
-            ]
-        );
-    }
-
     /**
      * @Route("", methods="POST", name="weather-time.show")
      */

@@ -1,20 +1,11 @@
 <?php
 
-namespace App\Tests\Controller;
+namespace App\Tests\Controller\API;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class WeatherTimeControllerTest extends WebTestCase
 {
-    public function testIndex()
-    {
-        $client = static::createClient();
-
-        $client->request('GET', '/');
-
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
-    }
-
     public function testShow()
     {
         $client = static::createClient();
@@ -22,7 +13,7 @@ class WeatherTimeControllerTest extends WebTestCase
         // test valid zip
         $client->xmlHttpRequest(
             'POST',
-            '/',
+            '',
             [],
             [],
             [
@@ -102,6 +93,5 @@ class WeatherTimeControllerTest extends WebTestCase
             $responseContent->errors[0]
         );
         $this->assertEquals('00000', $responseContent->zip);
-
     }
 }
