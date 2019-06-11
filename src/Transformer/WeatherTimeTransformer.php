@@ -2,6 +2,8 @@
 
 namespace App\Transformer;
 
+use DateTime;
+use DateTimeZone;
 use stdClass;
 
 class WeatherTimeTransformer
@@ -24,7 +26,10 @@ class WeatherTimeTransformer
                     'Country' => $weatherForZip->sys->country ?? null,
                     'Latitude' => $weatherForZip->coord->lat ?? null,
                     'Longitude' => $weatherForZip->coord->lon ?? null,
-                    'Report Time' => self::formatDateTime($weatherForZip->dt),
+                    'Report Time' => self::formatDateTime(
+                        $weatherForZip->dt,
+                        true
+                    ),
                 ],
                 function ($fieldValue) {
                     return !is_null($fieldValue);
@@ -76,14 +81,22 @@ class WeatherTimeTransformer
     }
 
     /**
-     * format a datetime
+     * format given datetime for WeatherTime page
+     *
      * @param int|null $datetime
-     * @param String format
+     * @param int|null $timezone
+     * @param bool $includeSeconds
      */
     private static function formatDateTime(
         int $datetime = null,
-        String $format = 'n/j/Y H:i:s T'
+        bool $includeSeconds = false
     ) {
-        return !is_null($datetime) ? date($format, $datetime) : null;
+        if (is_null($datetime)) {
+            return;
+        }
+        return (new DateTime("@{$datetime}"))
+            ->format(
+                'n/j/Y H:i' . (!empty($includeSeconds) ? ':s' : '') . ' T'
+            );
     }
 }

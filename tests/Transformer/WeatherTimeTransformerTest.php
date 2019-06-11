@@ -6,8 +6,10 @@ use App\Transformer\WeatherTimeTransformer;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 
-class WeatherTimeTransformerTest extends TestCase {
-    public function testValidWeatherForZip() {
+class WeatherTimeTransformerTest extends TestCase
+{
+    public function testValidWeatherForZip()
+    {
         $validZip = "92109";
         $validWeatherForZip = json_decode(json_encode([
             "coord" => [
@@ -53,7 +55,8 @@ class WeatherTimeTransformerTest extends TestCase {
             "cod" => "200",
         ]));
         $transformed = WeatherTimeTransformer::transform(
-            $validZip, $validWeatherForZip
+            $validZip,
+            $validWeatherForZip
         );
         $this->assertArrayHasKey('location_data', $transformed);
         $this->assertArrayHasKey('general_weather', $transformed);
